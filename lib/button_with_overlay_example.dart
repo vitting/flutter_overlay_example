@@ -41,7 +41,7 @@ class _ButtonWithOverlayExampleState extends State<ButtonWithOverlayExample> {
                             title: const Text('Option 1'),
                             onTap: () {
                               debugPrint('Option 1 selected');
-                              // ButtonWithOverlayManager().closeOverlay(_controller1);
+                              ButtonWithOverlayManager().closeOverlay(_controller1);
                             },
                             hoverColor: Colors.grey.shade300,
                             tileColor: Colors.white,
@@ -108,7 +108,7 @@ class _ButtonWithOverlayExampleState extends State<ButtonWithOverlayExample> {
                             title: const Text('Option 1'),
                             onTap: () {
                               debugPrint('Option 1 selected');
-                              // ButtonWithOverlayManager().closeOverlay(_controller2);
+                              ButtonWithOverlayManager().closeOverlay(_controller2);
                             },
                             hoverColor: Colors.grey.shade300,
                             tileColor: Colors.white,

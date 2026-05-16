@@ -10,23 +10,29 @@ class ButtonWithOverlayManager {
   ButtonWithOverlayManager._internal();
 
   OverlayPortalController? _currentController;
-
-  /// Listener callback for overlay state changes (true = open, false = closed)
-  Function(bool isCurrentButtonOpen)? _onOverlayStateChanged;
+  final Map<OverlayPortalController, Function(bool isCurrentButtonOpen)> _listeners = {};
 
   /// Add a listener for overlay open/close state changes
-  void addListener(Function(bool isCurrentButtonOpen) listener) {
-    _onOverlayStateChanged = listener;
+  void addListener(OverlayPortalController controller, Function(bool isCurrentButtonOpen) listener) {
+    _listeners[controller] = listener;
   }
 
   /// Remove the overlay state listener
-  void removeListener() {
-    _onOverlayStateChanged = null;
+  void removeListener(OverlayPortalController? controller) {
+    if (controller != null) {
+      _listeners.remove(controller);
+    }
   }
 
   /// Notify listener about overlay state change
   void _notifyStateChange(bool isOpen) {
-    _onOverlayStateChanged?.call(isOpen);
+    if (_currentController != null && _listeners.containsKey(_currentController)) {
+      for (var entry in _listeners.entries) {
+        if (entry.key == _currentController) {
+          entry.value(isOpen);
+        }
+      }
+    }
   }
 
   void openOverlay(OverlayPortalController controller) {
@@ -34,15 +40,17 @@ class ButtonWithOverlayManager {
     if (_currentController != null && _currentController != controller && _currentController!.isShowing) {
       _currentController!.hide();
     }
+
     _currentController = controller;
+    _currentController!.show();
     _notifyStateChange(true);
   }
 
   void closeOverlay(OverlayPortalController controller) {
     if (_currentController == controller) {
       _currentController!.hide();
-      _currentController = null;
       _notifyStateChange(false);
+      _currentController = null;
     }
   }
 }

@@ -17,7 +17,6 @@ class ButtonWithOverlay extends StatefulWidget {
 class ButtonWithOverlayState extends State<ButtonWithOverlay> {
   final _buttonKey = GlobalKey();
   bool _isOpen = false;
-  bool _closedByTapOutside = false;
   final _link = LayerLink();
   late final OverlayPortalController _overlayController;
 
@@ -30,38 +29,28 @@ class ButtonWithOverlayState extends State<ButtonWithOverlay> {
       _overlayController = OverlayPortalController();
     }
 
-    ButtonWithOverlayManager().addListener((isOpen) {
-      // debugPrint('Overlay is ${isOpen ? 'open' : 'closed'}');
+    ButtonWithOverlayManager().addListener(_overlayController, (isOpen) {
+      if (mounted) {
+        debugPrint('Overlay state changed: isOpen = $isOpen');
+        setState(() {
+          _isOpen = isOpen;
+        });
+      }
     });
   }
 
   @override
   void dispose() {
-    ButtonWithOverlayManager().removeListener();
+    ButtonWithOverlayManager().removeListener(_overlayController);
     super.dispose();
   }
 
   void onTap() {
-    if (_closedByTapOutside) {
-      setState(() {
-        // Consume the same tap sequence that already closed the overlay.
-        _closedByTapOutside = false;
-        _isOpen = false;
-      });
-      return;
-    }
-
-    setState(() {
-      if (_overlayController.isShowing) {
-        ButtonWithOverlayManager().closeOverlay(_overlayController);
-        _isOpen = false;
-        return;
-      }
-
+    if (_overlayController.isShowing) {
+      ButtonWithOverlayManager().closeOverlay(_overlayController);
+    } else {
       ButtonWithOverlayManager().openOverlay(_overlayController);
-      _overlayController.show();
-      _isOpen = true;
-    });
+    }
   }
 
   // Check if the tap was on the button itself to prevent closing the overlay when tapping the button again
@@ -92,14 +81,9 @@ class ButtonWithOverlayState extends State<ButtonWithOverlay> {
             link: _link,
             targetAnchor: Alignment.bottomLeft,
             child: TapRegion(
-              behavior: HitTestBehavior.deferToChild,
               onTapOutside: (event) {
-                if (_overlayController.isShowing) {
-                  setState(() {
-                    ButtonWithOverlayManager().closeOverlay(_overlayController);
-                    _closedByTapOutside = _isTapOnButton(event.position);
-                    _isOpen = false;
-                  });
+                if (_overlayController.isShowing && !_isTapOnButton(event.position)) {
+                  ButtonWithOverlayManager().closeOverlay(_overlayController);
                 }
               },
               onTapInside: (event) {
