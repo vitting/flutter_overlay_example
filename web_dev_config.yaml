@@ -1,0 +1,6 @@
+# Flutter web development configuration file
+# https://docs.flutter.dev/platform-integration/web/web-dev-config-file
+
+server:
+  # Specifies the port <int> for the development server
+  port: 8081
