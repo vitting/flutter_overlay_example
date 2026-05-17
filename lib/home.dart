@@ -11,6 +11,7 @@ class Home extends StatelessWidget {
         children: [
           ListTile(title: const Text('Button with Overlay Example'), onTap: () => Navigator.pushNamed(context, '/button_with_overlay')),
           ListTile(title: const Text('Notifications Example'), onTap: () => Navigator.pushNamed(context, '/notifications')),
+          ListTile(title: const Text('OverlayEntry Example'), onTap: () => Navigator.pushNamed(context, '/overlay-entry-example')),
         ],
       ),
     );

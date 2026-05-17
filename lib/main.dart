@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_overlay_example/button_with_overlay_example.dart';
 import 'package:flutter_overlay_example/home.dart';
 import 'package:flutter_overlay_example/notifications_example.dart';
+import 'package:flutter_overlay_example/overlay_entry_example.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => const Home(),
         ButtonWithOverlayExample.routeName: (context) => const ButtonWithOverlayExample(),
         NotificationsExample.routeName: (context) => const NotificationsExample(),
+        OverlayEntryExample.routeName: (context) => const OverlayEntryExample(),
       },
     );
   }
